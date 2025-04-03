@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Registro{% endblock %}
+{% block subtitle %}Crea tu cuenta{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="post">
+        <div class="form-group">
+            <label for="username"><i class="fas fa-user"></i> Usuario</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nombre"><i class="fas fa-id-card"></i> Nombre completo</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+
+        <button type="submit" class="btn" style="background: var(--accent);">
+            <i class="fas fa-user-plus"></i> Registrarse
+        </button>
+    </form>
+
+    <div class="links">
+        <p>¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión aquí</a></p>
+        <a href="{{ url_for('index') }}">← Volver al inicio</a>
+    </div>
+</div>
+{% endblock %}
