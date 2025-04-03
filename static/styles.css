@@ -104,7 +104,7 @@ body {
     text-align: center;
 }
 .links a {
-    color: #ffffff;
+    color: var(--primary);
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s;
