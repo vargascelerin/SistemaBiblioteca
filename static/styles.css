@@ -100,7 +100,7 @@ body {
 }
 
 .links a {
-    color: var(--primary);
+    color: #ffffff;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s;
