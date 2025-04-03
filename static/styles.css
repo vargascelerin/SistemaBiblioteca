@@ -89,6 +89,7 @@ body {
     width: 100%;
 }
 
+
 .btn:hover {
     background: var(--secondary);
     transform: translateY(-2px);
@@ -98,8 +99,17 @@ body {
     margin-top: 20px;
     text-align: center;
 }
-
+.links1 {
+    margin-top: 20px;
+    text-align: center;
+}
 .links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+.links1 a {
     color: #ffffff;
     text-decoration: none;
     font-weight: 500;
