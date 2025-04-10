@@ -1,0 +1,54 @@
+{% include 'partials/head.html' %}
+{% block content %}
+{% include 'partials/navbar.html' %}
+
+<!-- Header -->
+<header class="py-5" style="background-color: #4a6fa5;">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Resultados de búsqueda</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Resultados para: "{{ termino }}"</p>
+        </div>
+    </div>
+</header>
+
+
+<!-- Resultados -->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        {% if libros %}
+        <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 justify-content-center">
+            {% for libro in libros %}
+            <div class="col mb-4">
+                <div class="card flex-row align-items-center shadow-sm border-0 rounded-4 overflow-hidden h-100 card-hover">
+                    <div class="card-img-container bg-black">
+                        <img src="{{ libro.imagen or 'https://dummyimage.com/150x220/dee2e6/6c757d.jpg' }}"
+                             alt="{{ libro.titulo }}" class="img-fluid">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between p-3 bg-light w-100 align-items-stretch">
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">{{ libro.titulo }}</h6>
+                            <p class="mb-1 text-muted"><strong>Autor:</strong> {{ libro.autor.nombre }}</p>
+                            <p class="mb-1 text-muted"><strong>Género:</strong> {{ libro.genero.nombreGenero }}</p>
+                            <p class="mb-1 text-muted"><strong>Editorial:</strong> {{ libro.editorial }}</p>
+                        </div>
+                        <div class="mt-2">
+                            <a class="btn btn-detalles" href="{{ url_for('detalles_libro', id=libro.isbn) }}">
+                                <i class="fas fa-book-open me-1"></i> Ver Detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center mt-5">
+            <h4>No se encontraron resultados para "{{ termino }}"</h4>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% include 'partials/footer.html' %}
+{% endblock %}

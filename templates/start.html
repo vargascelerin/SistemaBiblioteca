@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio{% endblock %}
+{% block subtitle %}Sistema de Gestión Bibliotecaria{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    {% if session.username %}
+        <h2>Bienvenido, {{ session.username }}</h2>
+        <div class="links">
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+            </a>
+        </div>
+    {% else %}
+        <div class="links1">
+            <a href="{{ url_for('login') }}" class="btn">
+                <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+            </a>
+            <p style="margin: 15px 0;">¿No tienes cuenta?</p>
+            <a href="{{ url_for('register') }}" class="btn" style="background: var(--accent);">
+                <i class="fas fa-user-plus"></i> Registrarse
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 
