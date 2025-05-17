@@ -8,7 +8,7 @@ app.secret_key = 'clave_secreta_temporal_mejorar_en_produccion'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 # Conexión a MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://pruebas:12345@localhost/biblioteca'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:shipMentalBroke444@localhost/biblioteca'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -50,6 +50,28 @@ class Libro(db.Model):
 #relaciones
     autor = db.relationship('Autor', backref=db.backref('libros', lazy=True))
     genero = db.relationship('Genero', backref=db.backref('libros', lazy=True))
+
+# Modelo de préstamo
+class Prestamo(db.Model):
+    idPrestamo = db.Column(db.Integer, primary_key=True)
+    idUsuario = db.Column(db.Integer, db.ForeignKey('Usuario.idUsuario'))
+    isbn = db.Column(db.Integer, db.ForeignKey('libro.isbn'))
+    fecha_prestamo = db.Column(db.Date)
+    fecha_devolucion = db.Column(db.Date, nullable=True)
+
+    usuario = db.relationship('Usuario', backref=db.backref('prestamos', lazy=True))
+    libro = db.relationship('Libro', backref=db.backref('prestamos', lazy=True))
+
+# Modelo de reserva
+class Reserva(db.Model):
+    idReserva = db.Column(db.Integer, primary_key=True)
+    idUsuario = db.Column(db.Integer, db.ForeignKey('Usuario.idUsuario'))
+    isbn = db.Column(db.Integer, db.ForeignKey('libro.isbn'))
+    fecha_reserva = db.Column(db.Date)
+
+    usuario = db.relationship('Usuario', backref=db.backref('reservas', lazy=True))
+    libro = db.relationship('Libro', backref=db.backref('reservas', lazy=True))
+
 
 
 # Ruta principal
@@ -144,6 +166,19 @@ def buscar_libros():
     resultados = db.session.execute(sql, {'t': f'%{termino}%'}).fetchall()
 
     return render_template('resultados.html', libros=resultados, termino=termino)
+
+#Ruta para ver el historial de prestamos
+@app.route('/historial')
+def historial():
+    if 'username' not in session:
+        flash('Debes iniciar sesión para ver tu historial de préstamos', 'danger')
+        return redirect(url_for('login'))
+
+    usuario = Usuario.query.filter_by(nombre=session['username']).first()
+    prestamos = Prestamo.query.filter_by(idUsuario=usuario.idUsuario).all()
+    reservas = Reserva.query.filter_by(idUsuario=usuario.idUsuario).all()
+
+    return render_template('historial.html', prestamos=prestamos, reservas=reservas)
 
 
 #filtros
