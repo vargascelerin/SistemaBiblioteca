@@ -2,13 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy 
 from werkzeug.security import generate_password_hash, check_password_hash 
 from sqlalchemy import text
+from datetime import date
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_temporal_mejorar_en_produccion'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 # Conexión a MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:shipMentalBroke444@localhost/biblioteca'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Gignac10#@localhost/biblioteca'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -193,6 +194,54 @@ def libros_por_genero(genero_id):
     libros = Libro.query.filter_by(idGenero=genero_id).all()
     genero = Genero.query.get(genero_id)  
     return render_template('resultados.html', libros=libros, termino=genero.nombreGenero)
+
+@app.route('/reservar/<int:isbn>', methods=['POST'])
+def reservar_libro(isbn):
+    if 'username' not in session:
+        flash('Debes iniciar sesión para reservar un libro', 'danger')
+        return redirect(url_for('login'))
+
+    usuario = Usuario.query.filter_by(nombre=session['username']).first()
+    libro = Libro.query.get_or_404(isbn)
+
+    if libro.disponibilidad != 'disponible':
+        flash('El libro no está disponible para reserva', 'warning')
+        return redirect(url_for('detalles_libro', id=isbn))
+
+    reserva = Reserva(
+        idUsuario=usuario.idUsuario,
+        isbn=libro.isbn,
+        fecha_reserva=date.today()
+    )
+    db.session.add(reserva)
+    db.session.commit()
+    flash('Libro reservado exitosamente', 'success')
+    return redirect(url_for('historial'))
+
+@app.route('/prestamo/<int:isbn>', methods=['POST'])
+def prestar_libro(isbn):
+    if 'username' not in session:
+        flash('Debes iniciar sesión para pedir prestado un libro', 'danger')
+        return redirect(url_for('login'))
+
+    usuario = Usuario.query.filter_by(nombre=session['username']).first()
+    libro = Libro.query.get_or_404(isbn)
+
+    if libro.disponibilidad != 'disponible':
+        flash('El libro no está disponible para préstamo', 'warning')
+        return redirect(url_for('detalles_libro', id=isbn))
+
+    prestamo = Prestamo(
+        idUsuario=usuario.idUsuario,
+        isbn=libro.isbn,
+        fecha_prestamo=date.today(),
+        fecha_devolucion=None
+    )
+    libro.disponibilidad = 'no disponible'  # marcar como prestado
+    db.session.add(prestamo)
+    db.session.commit()
+    flash('Libro prestado exitosamente', 'success')
+    return redirect(url_for('historial'))
 
 @app.context_processor
 def inject_filters():

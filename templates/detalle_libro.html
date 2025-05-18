@@ -68,15 +68,21 @@
                                     <i class="bi bi-bookmark me-2"></i> Reservar
                                 </a>
                             {% else %}
-                                <!-- Usuario logueado: botones reales (puedes agregar lógica JS o acciones aquí) -->
-                                <button class="btn btn-primary btn-lg btn-hover">
-                                    <i class="bi bi-book me-2"></i> Pedir Prestado
-                                </button>
-                                <button class="btn btn-outline-secondary btn-lg btn-hover">
-                                    <i class="bi bi-bookmark me-2"></i> Reservar
-                                </button>
+                                <!-- Usuario logueado: formularios funcionales -->
+                                <form action="{{ url_for('prestar_libro', isbn=libro.isbn) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-hover">
+                                        <i class="bi bi-book me-2"></i> Pedir Prestado
+                                    </button>
+                                </form>
+                        
+                                <form action="{{ url_for('reservar_libro', isbn=libro.isbn) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-secondary btn-lg btn-hover">
+                                        <i class="bi bi-bookmark me-2"></i> Reservar
+                                    </button>
+                                </form>
                             {% endif %}
                         </div>
+                        
                         
                         <div class="d-flex flex-wrap gap-3 mt-3">
                             <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg btn-hover">
