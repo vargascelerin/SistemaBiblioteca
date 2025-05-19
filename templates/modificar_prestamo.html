@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Modificar Préstamo</h2>
+    
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ prestamo.libro.titulo }}</h5>
+            <p class="card-text">Usuario: {{ prestamo.usuario.nombre }}</p>
+            
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Tipo de fecha a modificar:</label>
+                    <select name="tipo_fecha" class="form-select">
+                        <option value="prestamo">Fecha de Préstamo</option>
+                        <option value="devolucion">Fecha de Devolución Esperada</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Nueva fecha:</label>
+                    <input type="date" name="fecha" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <a href="{{ url_for('gestion_prestamos') }}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

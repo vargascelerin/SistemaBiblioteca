@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'layout.html' %}
 
 {% block content %}
 <div class="container py-4">
@@ -14,8 +14,8 @@
         <div>
           <h5 class="mb-1">{{ prestamo.libro.titulo }}</h5>
           <small class="text-muted">Prestado el: {{ prestamo.fecha_prestamo.strftime('%d/%m/%Y') }}</small><br>
-          {% if prestamo.fecha_devolucion %}
-            <small class="text-success">Devuelto el: {{ prestamo.fecha_devolucion.strftime('%d/%m/%Y') }}</small>
+          {% if prestamo.estado == 'completado' %}
+            <small class="text-success">Devuelto</small>
           {% else %}
             <small class="text-warning">Aún no devuelto</small>
           {% endif %}
@@ -47,4 +47,5 @@
     <p>No tienes reservas registradas.</p>
   {% endif %}
 </div>
+{% include 'partials/footer.html' %}
 {% endblock %}

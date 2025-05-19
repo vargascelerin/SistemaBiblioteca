@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pt-3">
+        <h2 class="mb-0">Panel de Control</h2>
+        <div>
+            <span class="badge bg-primary me-2">
+                <i class="fas fa-book-open me-1"></i> Préstamos activos: {{ prestamos_activos }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="row g-3">
+        <!-- Sección de Acciones -->
+        <div class="col-lg-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Acciones Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('gestion_prestamos') }}" class="btn btn-outline-primary text-start">
+                            <i class="fas fa-exchange-alt me-2"></i>Gestionar Préstamos
+                        </a>
+                        <a href="{{ url_for('registrar_libro') }}" class="btn btn-outline-success text-start">
+                            <i class="fas fa-plus-circle me-2"></i>Agregar Libro
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Catálogo de Libros -->
+
+        <div class="col-lg-9">
+            <div class="card shadow-sm">
+                <div class="card-body pb-5"> <!-- Espacio extra en la parte inferior -->
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                        {% for libro in libros %}
+                        <div class="col">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-img-top bg-light p-3 text-center" style="height: 150px;">
+                                    <img src="{{ libro.imagen or 'https://dummyimage.com/150x220/dee2e6/6c757d.jpg' }}" 
+                                        alt="{{ libro.titulo }}" 
+                                        class="img-fluid h-100" style="object-fit: contain;">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold">{{ libro.titulo }}</h6>
+                                    <p class="small mb-1"><strong>Autor:</strong> {{ libro.autor.nombre }}</p>
+                                    <p class="small mb-2"><strong>Género:</strong> {{ libro.genero.nombreGenero }}</p>
+                                    <p class="small mb-2"><strong>Estado:</strong> {{ libro.estado }}</p>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-{% if libro.disponibilidad == 'disponible' %}success{% else %}danger{% endif %}">
+                                            {{ libro.disponibilidad|capitalize }}
+                                        </span>
+                                        <div class="btn-group">
+                                            <a href="{{ url_for('editar_libro', id=libro.isbn) }}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminarLibroModal{{ libro.isbn }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Modal para eliminar -->
+                            <div class="modal fade" id="eliminarLibroModal{{ libro.isbn }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Confirmar eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Estás seguro de eliminar "{{ libro.titulo }}"?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form action="{{ url_for('eliminar_libro', id=libro.isbn) }}" method="POST">
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h4>Editar Libro</h4>
+    <form method="POST" action="{{ url_for('editar_libro', id=libro.isbn) }}">
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" value="{{ libro.titulo }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="autor" class="form-label">Autor</label>
+            <select class="form-select" name="autor" required>
+                {% for autor in autores %}
+                <option value="{{ autor.idAutor }}" {% if autor.idAutor == libro.idAutor %}selected{% endif %}>{{ autor.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="genero" class="form-label">Género</label>
+            <select class="form-select" name="genero" required>
+                {% for genero in generos %}
+                <option value="{{ genero.idGenero }}" {% if genero.idGenero == libro.idGenero %}selected{% endif %}>{{ genero.nombreGenero }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="editorial" class="form-label">Editorial</label>
+            <input type="text" class="form-control" name="editorial" value="{{ libro.editorial }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="estado" class="form-label">Estado</label>
+            <select class="form-select" name="estado" id="estado" required>
+                <option value="nuevo" {% if libro.estado == 'nuevo' %}selected{% endif %}>Nuevo</option>
+                <option value="usado" {% if libro.estado == 'usado' %}selected{% endif %}>Usado</option>
+                <option value="deteriorado" {% if libro.estado == 'deteriorado' %}selected{% endif %}>Deteriorado</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="disponibilidad" class="form-label">Disponibilidad</label>
+            <select class="form-select" name="disponibilidad" required>
+                <option value="disponible" {% if libro.disponibilidad == 'disponible' %}selected{% endif %}>disponible</option>
+                <option value="no disponible" {% if libro.disponibilidad == 'no disponible' %}selected{% endif %}>no disponible</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar Libro</button>
+    </form>
+</div>
+{% endblock %}

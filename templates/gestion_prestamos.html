@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Gestión de Préstamos</h2>
+    
+    <div class="table-responsive mt-3">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Libro</th>
+                    <th>Usuario</th>
+                    <th>Fecha Préstamo</th>
+                    <th>Devolución Esperada</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in prestamos %}
+                <tr class="{% if p.estado == 'vencido' %}table-danger{% elif p.estado == 'extendido' %}table-warning{% endif %}">
+                    <td>{{ p.libro.titulo }}</td>
+                    <td>{{ p.usuario.nombre }}</td>
+                    <td>{{ p.fecha_prestamo.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ p.fecha_devolucion_esperada.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ p.estado|capitalize }}</td>
+                    <td>
+                        {% if p.estado in ['activo', 'extendido'] %}
+                        <form method="POST" action="{{ url_for('extender_prestamo', id=p.idPrestamo) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-warning" {% if p.extensiones >= 2 %}disabled{% endif %}>
+                                Extender ({{ 2 - p.extensiones }})
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('registrar_devolucion', id=p.idPrestamo) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success">Devolver</button>
+                        </form>
+                        {% endif %}
+                        <a href="{{ url_for('modificar_prestamo', id=p.idPrestamo) }}" class="btn btn-sm btn-info">Modificar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

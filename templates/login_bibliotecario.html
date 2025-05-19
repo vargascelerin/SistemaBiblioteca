@@ -6,10 +6,10 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Iniciar Sesión</h4>
+                    <h4 class="mb-0">Acceso Bibliotecarios</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ url_for('login') }}">
+                    <form method="POST" action="{{ url_for('login_bibliotecario') }}">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" required>
@@ -21,15 +21,10 @@
                         <button type="submit" class="btn btn-primary w-100">Ingresar</button>
                     </form>
                 </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ url_for('register') }}" class="text-decoration-none">
-                            ¿No tienes cuenta? Regístrate
-                        </a>
-                        <a href="{{ url_for('login_bibliotecario') }}" class="text-decoration-none">
-                            <i class="fas fa-user-shield"></i> Acceso Bibliotecarios
-                        </a>
-                    </div>
+                <div class="card-footer text-center">
+                    <a href="{{ url_for('index') }}" class="text-decoration-none">
+                        <i class="fas fa-arrow-left"></i> Volver al inicio
+                    </a>
                 </div>
             </div>
         </div>
